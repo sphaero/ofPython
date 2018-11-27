@@ -10,3 +10,8 @@ count = 0
 def countuntil(a):
     count+=1
     return count%a
+
+def test2():
+    global count
+    count+=1
+    return count

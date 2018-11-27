@@ -5,7 +5,6 @@ void ofApp::setup(){
     Py_Initialize();
 
     //init stuff
-
     //perhaps expand the python path?
     PyRun_SimpleString(
                     "import sys\n"
@@ -33,8 +32,74 @@ void ofApp::setup(){
     );*/
 
     const char* args[] = {"1", "2"};
-    std::vector<std::string> v(args, args + 2);
-    run_python( "tester", "test", v);
+    v = {"1", "2"};//v(args, args + 2);
+    //run_python( "tester", "test", v);
+    init_pyfiles();
+}
+
+int ofApp::init_pyfiles()
+{
+    //tester.py
+    PyObject *pName, *pModule;
+    pName = PyUnicode_DecodeFSDefault( "tester" );
+    if ( pName != NULL )
+    {
+        pModule = PyImport_Import( pName );
+        if ( pModule != NULL )
+        {
+            // succeeded save to pymods map
+            pymods.insert(std::pair<std::string, PyObject*>("tester", pModule));
+            return 0;
+        }
+        else
+        {
+            ofLogError() << "error importing tester.py";
+            return 2;
+        }
+    }
+    else
+    {
+        ofLogError() << "error loading tester.py";
+        return 3;
+    }
+}
+
+int ofApp::run_method(PyObject* pModule, const std::string method_name)
+{
+    PyObject *pFunc, *pValue;
+    if ( pModule != NULL )
+    {
+        pFunc = PyObject_GetAttrString( pModule, method_name.c_str() );
+        if ( pFunc && PyCallable_Check( pFunc ) )
+        {
+            //we have a method
+            // determine args TODO
+            pValue = PyObject_CallObject(pFunc, NULL);
+            if ( pValue != NULL )
+            {
+                printf("Result of call: %ld\n", PyLong_AsLong(pValue));
+                Py_DECREF(pValue);
+                Py_DECREF(pFunc);
+                return 0;
+            }
+            else
+            {
+                if (PyErr_Occurred())
+                    PyErr_Print();
+                ofLogError() << "Call: " << method_name << " failed";
+                Py_DECREF(pFunc);
+                return 1;
+            }
+        }
+        else
+        {
+            if (PyErr_Occurred())
+                PyErr_Print();
+            ofLogError() << "Can't find method: " << method_name;
+            return 2;
+        }
+    }
+    return 3;
 }
 
 int ofApp::run_python(const char* pyfile, const char* pymethod, vector<string> pyargs) {
@@ -100,9 +165,11 @@ int ofApp::run_python(const char* pyfile, const char* pymethod, vector<string> p
     }
     return 201;
 }
+
 //--------------------------------------------------------------
 void ofApp::update(){
-
+    ofLogNotice() << run_method( pymods["tester"], "test2");
+    //run_python( "tester", "test", v);
 }
 
 //--------------------------------------------------------------

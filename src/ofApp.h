@@ -11,6 +11,8 @@ public:
     void draw();
     int run_python(const char* pyfile, const char* pymethod, vector<string> pyargs);
 
+    int init_pyfiles();
+    int run_method(PyObject* pModule, std::string method_name);
     void keyPressed(int key);
     void keyReleased(int key);
     void mouseMoved(int x, int y );
@@ -23,4 +25,6 @@ public:
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
 
+    std::vector<std::string> v;
+    std::map<string,PyObject*> pymods;
 };
