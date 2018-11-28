@@ -33,7 +33,7 @@ void ofApp::setup(){
 
     const char* args[] = {"1", "2"};
     v = {"1", "2"};//v(args, args + 2);
-    //run_python( "tester", "test", v);
+    run_python( "tester", "test", v);
     init_pyfiles();
 }
 
@@ -160,9 +160,6 @@ int ofApp::run_python(const char* pyfile, const char* pymethod, vector<string> p
         fprintf(stderr, "Failed to load \"%s\"\n", pyfile);
         return 1;
     }
-    if (Py_FinalizeEx() < 0) {
-        return 120;
-    }
     return 201;
 }
 
@@ -230,4 +227,11 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){
 
+}
+
+void ofApp::exit()
+{
+    if (Py_FinalizeEx() < 0) {
+        ofLogError() << "Some error while finalizing Python";
+    }
 }
