@@ -12,10 +12,16 @@ Project{
         name: { return FileInfo.baseName(sourceDirectory) }
 
         files: [
+            "bin/openframeworks.py",
             "bin/tester.py",
+            "src/glmBindings.cpp",
             "src/main.cpp",
             "src/ofApp.cpp",
             "src/ofApp.h",
+            "src/ofBindings.cpp",
+            "src/ofBindings.h",
+            "src/ofpy.cpp",
+            "src/ofpy.h",
         ]
 
         of.addons: [
@@ -28,7 +34,7 @@ Project{
         of.pkgConfigs: ['python3']       // list of additional system pkgs to include
         of.includePaths: ['/usr/include/python3.6m', '/usr/include/x86_64-linux-gnu/python3.6m']     // include search paths
         of.cFlags: []           // flags passed to the c compiler
-        of.cxxFlags: []         // flags passed to the c++ compiler
+        of.cxxFlags: ['-Wno-error=old-style-cast']         // flags passed to the c++ compiler
         of.linkerFlags: ['-lpython3.6m']      // flags passed to the linker
         of.defines: []          // defines are passed as -D to the compiler
         // and can be checked with #ifdef or #if in the code
