@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#include <Python.h>
+#include "ofpy.h"
 
 class ofApp : public ofBaseApp{
 
@@ -11,8 +11,8 @@ public:
     void draw();
     int run_python(const char* pyfile, const char* pymethod, vector<string> pyargs);
 
-    int init_pyfiles();
-    int run_method(PyObject* pModule, std::string method_name);
+    //int init_pyfiles();
+    //int run_method(PyObject* pModule, std::string method_name);
     void keyPressed(int key);
     void keyReleased(int key);
     void mouseMoved(int x, int y );
